@@ -4,11 +4,11 @@
 Summary: An unwinding library for ia64.
 Name: libunwind
 # Latest libunwind release.
-Version: 0.92
-Release: 2
+Version: 0.96
+Release: 1
 License: BSD
 Group: Development/Debuggers
-Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-0.92.tar.gz
+Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-0.96.tar.gz
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 URL: http://www.hpl.hp.com/research/linux/libunwind/index.php4/
 ExclusiveArch: ia64
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/*
 
 %changelog
+* Thu Jan 29 2004  Jeff Johnston <jjohnstn@redhat.com>	0.96.1
+- Import version 0.96.
+
 * Tue Jan 06 2004  Jeff Johnston <jjohnstn@redhat.com>	0.92.2
 - Bump release number.
 
