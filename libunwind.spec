@@ -5,7 +5,7 @@ Summary: An unwinding library for ia64.
 Name: libunwind
 # Latest libunwind release.
 Version: 0.97
-Release: 2
+Release: 3
 License: BSD
 Group: Development/Debuggers
 Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-0.97.tar.gz
@@ -40,10 +40,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc COPYING README NEWS
 %{_mandir}/*/*
-/usr/lib/*
+/usr/lib/libunwind*
 /usr/include/*
 
 %changelog
+* Thu Aug 19 2004 Jeff Johnston <jjohnstn@redhat.com>	0.97.3
+- Remove debug file from files list.
+
 * Fri Aug 13 2004 Jeff Johnston <jjohnstn@redhat.com>	0.97.2
 - Import version 0.97.
 
