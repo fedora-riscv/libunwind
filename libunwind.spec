@@ -5,7 +5,7 @@ Summary: An unwinding library for ia64.
 Name: libunwind
 # Latest libunwind release.
 Version: 0.98.2
-Release: 3.1
+Release: 3.2
 License: BSD
 Group: Development/Debuggers
 Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-0.98.2.tar.gz
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/*
 
 %changelog
+* Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 0.98.2-3.2
+- rebuilt for new gcc4.1 snapshot and glibc changes
+
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
