@@ -5,10 +5,11 @@ Summary: An unwinding library for ia64.
 Name: libunwind
 # Latest libunwind release.
 Version: 0.98.5
-Release: 1.1
+Release: 2
 License: BSD
 Group: Development/Debuggers
 Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-%{version}.tar.gz
+Patch1: libunwind-0.98.5-stack-nonexec.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 URL: http://www.hpl.hp.com/research/linux/libunwind/index.php4/
 ExclusiveArch: ia64
@@ -22,6 +23,9 @@ This version of libunwind is targetted for the ia64 platform.
 
 %prep
 %setup
+
+# Fix-up SELinux compatibility for Bug 201888.
+%patch1 -p1 -b .nonexec
 
 %build
 %configure
@@ -41,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/*
 
 %changelog
+* Sat Sep 22 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.98.5-2
+- SELinux compatibility fix - stack is now non-exec (Jakub Jelinek suggestion).
+
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 0.98.5-1.1
 - rebuild
 
