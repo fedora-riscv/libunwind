@@ -1,0 +1,49 @@
+#! /usr/bin/perl
+# $Id$
+
+use strict;
+use warnings;
+
+
+sub readfile($)
+{
+my($filename)=@_;
+
+  local *F;
+  open F,$filename or die "open \"$filename\": $!";
+  my $F=do { local $/; <F>; } or die "read \"$filename\": $!";
+  close F or die "close \"$filename\": $!";
+  return $F;
+}
+
+sub writefile($$)
+{
+my($filename,$content)=@_;
+
+  local *F;
+  open F,">".$filename or die "create \"$filename\": $!";
+  print F $content or die "write \"$filename\": $!";
+  close F or die "close \"$filename\": $!";
+}
+
+my $spec=readfile "./libunwind.spec";
+
+sub define_get($)
+{
+my($name)=@_;
+
+  my $r=($spec=~/^[%]define\s+\Q$name\E\s+(\S+)\s*$/m)[0] or die $name;
+  return $r;
+}
+
+my $frysksnap=define_get "frysksnap";
+my $upstreamsnap=define_get "upstreamsnap";
+
+my $patch="./libunwind-snap-${upstreamsnap}-frysk${frysksnap}.patch";
+die $patch if !-e $patch;
+
+my $content=readfile 'cvs -d :pserver:anoncvs@sources.redhat.com:/cvs/frysk'." rdiff -ko -r libunwind-20$upstreamsnap -r libunwind-0_99-0_1_frysk$frysksnap -u frysk-imports/libunwind|";
+1 while $content=~s{^([^-+].*|--- |\Q+++\E )frysk-imports/(libunwind/)}{$1$2}mg;
+writefile $patch,$content;
+
+print "OK\n";

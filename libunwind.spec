@@ -1,50 +1,88 @@
 # Define this if you want to skip the strip step and preserve debug info.
 # Useful for testing. 
 #define __spec_install_post /usr/lib/rpm/brp-compress || :
-Summary: An unwinding library for ia64.
+Summary: An unwinding library
 Name: libunwind
 # Latest libunwind release.
-Version: 0.98.5
-Release: 3
+Version: 0.99
+%define frysksnap 20070405cvs
+%define upstreamsnap 070224
+Release: 0.1.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
-Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/libunwind-%{version}.tar.gz
-Patch1: libunwind-0.98.5-stack-nonexec.patch
-Buildroot: %{_tmppath}/%{name}-%{version}-root
-URL: http://www.hpl.hp.com/research/linux/libunwind/index.php4/
-ExclusiveArch: ia64
+Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
+Patch1: libunwind-snap-%{upstreamsnap}-frysk%{frysksnap}.patch
+Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+URL: http://savannah.nongnu.org/projects/libunwind
+ExclusiveArch: ia64 x86_64 i386 ppc64
 
 BuildRequires: glibc gcc make tar gzip
-Prereq: info
+BuildRequires: automake libtool autoconf
 
 %description
 Libunwind provides a C ABI to determine the call-chain of a program.
 This version of libunwind is targetted for the ia64 platform.
 
-%prep
-%setup
+%package devel
+Summary: Development package for libunwind
+Group: Development/Debuggers
+Requires: libunwind = %{PACKAGE_VERSION}
+%description devel
+The libunwind-devel package includes the libraries and header files for
+libunwind.
 
-# Fix-up SELinux compatibility for Bug 201888.
-%patch1 -p1 -b .nonexec
+%prep
+%setup -q -n %{name}-%{version}-alpha
+
+%patch1 -p1 -E
+# New files from Patch1:
+chmod +x tests/run-ptrace-stepper
+chmod +x tests/run-ptrace-signull
 
 %build
-%configure
+mkdir -p config
+aclocal
+libtoolize
+autoheader
+automake --add-missing
+autoconf
+%configure --disable-static --enable-shared
 make
 
 %install
 %makeinstall
+rm -f $RPM_BUILD_ROOT/%{_libdir}/libunwind*.la
+
+%check
+make check || true
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
 %files
 %defattr(-,root,root)
 %doc COPYING README NEWS
+%{_libdir}/libunwind*.so.*
+
+%files devel
+%defattr(-,root,root)
+%{_libdir}/libunwind*.so
 %{_mandir}/*/*
-/usr/lib/libunwind*
-/usr/include/*
+%{_includedir}/*
 
 %changelog
+* Thu Apr  5 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.1.frysk20070405cvs
+- Update to the upstream snapshot snap-070224.
+- Use the Frysk's modified version, currently snapshot 20070405cvs.
+- Extend the supported architectures from ia64 also to x86_64, i386 and ppc64.
+- Spec file fixups.
+- Split the package to its base and the `devel' part.
+- Drop the statically built libraries.
+
 * Sun Oct 01 2006 Jesse Keating <jkeating@redhat.com> - 0.98.5-3
 - rebuilt for unwind info generation, broken in gcc-4.1.1-21
 
