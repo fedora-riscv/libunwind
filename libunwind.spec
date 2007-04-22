@@ -1,13 +1,14 @@
 # Define this if you want to skip the strip step and preserve debug info.
 # Useful for testing. 
-#define __spec_install_post /usr/lib/rpm/brp-compress || :
+#define __debug_install_post : > %{_builddir}/%{?buildsubdir}/debugfiles.list
+
 Summary: An unwinding library
 Name: libunwind
 # Latest libunwind release.
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.1.frysk%{frysksnap}%{?dist}
+Release: 0.2.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
@@ -18,6 +19,7 @@ ExclusiveArch: ia64 x86_64 i386 ppc64
 
 BuildRequires: glibc gcc make tar gzip
 BuildRequires: automake libtool autoconf
+Conflicts: gdb < 6.6-9
 
 %description
 Libunwind provides a C ABI to determine the call-chain of a program.
@@ -75,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Apr 22 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.2.frysk20070405cvs
+- Require conflict with gdb < gdb-6.6-9 as it would not find `libunwind.so'.
+- Fixed (unused - commented) rule for a RPM build with embedded debug info.
+
 * Thu Apr  5 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.1.frysk20070405cvs
 - Update to the upstream snapshot snap-070224.
 - Use the Frysk's modified version, currently snapshot 20070405cvs.
