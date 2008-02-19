@@ -8,7 +8,7 @@ Name: libunwind
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.2.frysk%{frysksnap}%{?dist}
+Release: 0.3.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 0.99-0.3.frysk20070405cvs
+- Autorebuild for GCC 4.3
+
 * Sun Apr 22 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.2.frysk20070405cvs
 - Require conflict with gdb < gdb-6.6-9 as it would not find `libunwind.so'.
 - Fixed (unused - commented) rule for a RPM build with embedded debug info.
