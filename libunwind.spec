@@ -8,12 +8,13 @@ Name: libunwind
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.4.frysk%{frysksnap}%{?dist}
+Release: 0.5.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
 Patch1: libunwind-snap-%{upstreamsnap}-frysk%{frysksnap}.patch
 Patch2: libunwind-snap-070224-orphanripper.patch
+Patch3: libunwind-snap-070224-multilib-rh342451.patch
 Source1: libunwind-orphanripper.c
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL: http://savannah.nongnu.org/projects/libunwind
@@ -45,6 +46,8 @@ chmod +x tests/run-ptrace-signull
 
 %patch2 -p1 -E
 cp -p %{SOURCE1} tests/orphanripper.c
+
+%patch3 -p1 -E
 
 %build
 mkdir -p config
@@ -82,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Feb 24 2008 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.5.frysk20070405cvs
+- Fix the multilib conflicts (BZ 342451).
+
 * Sun Feb 24 2008 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.4.frysk20070405cvs
 - Abort the possibly hung up testcases after 120 seconds (BZ 427850, BZ 434147).
 
