@@ -1,3 +1,6 @@
+# rpmbuild parameters:
+# --without check: Do not run the testsuite.  Default is to run it.
+
 # Define this if you want to skip the strip step and preserve debug info.
 # Useful for testing. 
 #define __debug_install_post : > %{_builddir}/%{?buildsubdir}/debugfiles.list
@@ -8,13 +11,14 @@ Name: libunwind
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.5.frysk%{frysksnap}%{?dist}
+Release: 0.6.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
 Patch1: libunwind-snap-%{upstreamsnap}-frysk%{frysksnap}.patch
 Patch2: libunwind-snap-070224-orphanripper.patch
 Patch3: libunwind-snap-070224-multilib-rh342451.patch
+Patch4: libunwind-snap-070224-dprintf-vs-stdio.h
 Source1: libunwind-orphanripper.c
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL: http://savannah.nongnu.org/projects/libunwind
@@ -48,6 +52,7 @@ chmod +x tests/run-ptrace-signull
 cp -p %{SOURCE1} tests/orphanripper.c
 
 %patch3 -p1 -E
+%patch4 -p1 -E
 
 %build
 mkdir -p config
@@ -64,7 +69,13 @@ make
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libunwind*.la
 
 %check
+%if 0%{?_without_check:1} || 0%{?_without_testsuite:1}
+echo ====================TESTSUITE DISABLED=========================
+%else
+echo ====================TESTING=========================
 make check || true
+echo ====================TESTING END=====================
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -85,6 +96,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Mon Sep 22 2008 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.6.frysk20070405cvs
+- Fix build error due to a `dprintf' conflict on recent glibc.
+- New rpmbuild parameter: --without check
+
 * Sun Feb 24 2008 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.5.frysk20070405cvs
 - Fix the multilib conflicts (BZ 342451).
 
