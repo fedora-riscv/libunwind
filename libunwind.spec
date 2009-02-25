@@ -11,7 +11,7 @@ Name: libunwind
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.6.frysk%{frysksnap}%{?dist}
+Release: 0.7.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.7.frysk20070405cvs
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Mon Sep 22 2008 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.6.frysk20070405cvs
 - Fix build error due to a `dprintf' conflict on recent glibc.
 - New rpmbuild parameter: --without check
