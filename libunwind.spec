@@ -11,7 +11,7 @@ Name: libunwind
 Version: 0.99
 %define frysksnap 20070405cvs
 %define upstreamsnap 070224
-Release: 0.7.frysk%{frysksnap}%{?dist}
+Release: 0.8.frysk%{frysksnap}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
@@ -22,9 +22,8 @@ Patch4: libunwind-snap-070224-dprintf-vs-stdio.h
 Source1: libunwind-orphanripper.c
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: ia64 x86_64 i386 ppc64
+ExclusiveArch: ia64 x86_64 %{ix86} ppc64
 
-BuildRequires: glibc gcc make tar gzip
 BuildRequires: automake libtool autoconf
 Conflicts: gdb < 6.6-9
 
@@ -96,6 +95,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Mar  3 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.8.frysk20070405cvs
+- Fix .spec ExclusiveArch from i386 to %%{ix86}.
+- Remove `BuildRequires: glibc gcc make tar gzip' - minimum build environment.
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.7.frysk20070405cvs
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
