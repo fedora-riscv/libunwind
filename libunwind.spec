@@ -7,25 +7,20 @@
 
 Summary: An unwinding library
 Name: libunwind
-# Latest libunwind release.
 Version: 0.99
-%define frysksnap 20070405cvs
-%define upstreamsnap 070224
-Release: 0.8.frysk%{frysksnap}%{?dist}
+%define snapshot 20090413betagitb483ea3f
+Release: 0.9.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
-Source: http://download.savannah.nongnu.org/releases/libunwind/libunwind-snap-%{upstreamsnap}.tar.gz
-Patch1: libunwind-snap-%{upstreamsnap}-frysk%{frysksnap}.patch
-Patch2: libunwind-snap-070224-orphanripper.patch
-Patch3: libunwind-snap-070224-multilib-rh342451.patch
-Patch4: libunwind-snap-070224-dprintf-vs-stdio.h
-Source1: libunwind-orphanripper.c
-Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Source: libunwind-%{snapshot}.tar.bz2
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: ia64 x86_64 %{ix86} ppc64
+ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
 Conflicts: gdb < 6.6-9
+
+# host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
+%define _host %{_target_platform}
 
 %description
 Libunwind provides a C ABI to determine the call-chain of a program.
@@ -40,23 +35,11 @@ The libunwind-devel package includes the libraries and header files for
 libunwind.
 
 %prep
-%setup -q -n %{name}-%{version}-alpha
-
-%patch1 -p1 -E
-# New files from Patch1:
-chmod +x tests/run-ptrace-stepper
-chmod +x tests/run-ptrace-signull
-
-%patch2 -p1 -E
-cp -p %{SOURCE1} tests/orphanripper.c
-
-%patch3 -p1 -E
-%patch4 -p1 -E
+%setup -q -n libunwind-%{snapshot}
 
 %build
-mkdir -p config
 aclocal
-libtoolize
+libtoolize --force
 autoheader
 automake --add-missing
 autoconf
@@ -65,15 +48,15 @@ make
 
 %install
 %makeinstall
-rm -f $RPM_BUILD_ROOT/%{_libdir}/libunwind*.la
+rm -f $RPM_BUILD_ROOT/%{_libdir}/libunwind*.{la,a}
 
 %check
-%if 0%{?_without_check:1} || 0%{?_without_testsuite:1}
-echo ====================TESTSUITE DISABLED=========================
-%else
+%if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
 echo ====================TESTING=========================
 make check || true
 echo ====================TESTING END=====================
+%else
+echo ====================TESTSUITE DISABLED=========================
 %endif
 
 %clean
@@ -92,9 +75,22 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_libdir}/libunwind*.so
 %{_mandir}/*/*
-%{_includedir}/*
+# <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
+%{_includedir}/unwind.h
+%{_includedir}/libunwind*.h
 
 %changelog
+* Mon Apr 13 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.9.20090413betagitb483ea3f
+- Rebase the package on the upstream variant: http://www.nongnu.org/libunwind/
+  - Drop the patch libunwind-snap-070224-frysk20070405cvs.patch
+    as even frysk-0.4-8.fc11 still has this library bundled statically.
+- Disable the testsuite by default during the build.
+  - It should be run separately as it crashes some ia64 kernels.
+  - Drop the patch libunwind-snap-070224-orphanripper.patch.
+- Drop the patch libunwind-snap-070224-dprintf-vs-stdio.h as no longer needed.
+- Drop libunwind-snap-070224-multilib-rh342451.patch as accepted upstream.
+- Fix and enable ppc (ppc32) arch.
+
 * Tue Mar  3 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.8.frysk20070405cvs
 - Fix .spec ExclusiveArch from i386 to %%{ix86}.
 - Remove `BuildRequires: glibc gcc make tar gzip' - minimum build environment.
