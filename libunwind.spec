@@ -8,8 +8,8 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 0.99
-%define snapshot 20090413betagitb483ea3f
-Release: 0.9.%{snapshot}%{?dist}
+%define snapshot 20090430betagit4b8404d1
+Release: 0.10.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Apr 30 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.10.20090430betagit4b8404d1
+- Fix the ia64 variant of GetIPInfo() (BZ 480412).
+
 * Mon Apr 13 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.9.20090413betagitb483ea3f
 - Rebase the package on the upstream variant: http://www.nongnu.org/libunwind/
   - Drop the patch libunwind-snap-070224-frysk20070405cvs.patch
