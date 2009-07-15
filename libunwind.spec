@@ -9,10 +9,11 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.10.%{snapshot}%{?dist}
+Release: 0.11.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
+Patch1: libunwind-disable-setjmp.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -36,6 +37,7 @@ libunwind.
 
 %prep
 %setup -q -n libunwind-%{snapshot}
+%patch1 -p1
 
 %build
 aclocal
@@ -80,6 +82,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Jul 15 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.11.20090430betagit4b8404d1
+- Disable the libunwind-setjmp library as no longer compatible with glibc and
+  no Fedora dependencies on it (FTBSFS BZ 511562).
+
 * Thu Apr 30 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.10.20090430betagit4b8404d1
 - Fix the ia64 variant of GetIPInfo() (BZ 480412).
 
