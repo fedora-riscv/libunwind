@@ -9,7 +9,7 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.11.%{snapshot}%{?dist}
+Release: 0.12.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.12.20090430betagit4b8404d1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Wed Jul 15 2009 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-0.11.20090430betagit4b8404d1
 - Disable the libunwind-setjmp library as no longer compatible with glibc and
   no Fedora dependencies on it (FTBSFS BZ 511562).
