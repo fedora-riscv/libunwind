@@ -9,7 +9,7 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.12.%{snapshot}%{?dist}
+Release: 0.13.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -30,7 +30,7 @@ This version of libunwind is targetted for the ia64 platform.
 %package devel
 Summary: Development package for libunwind
 Group: Development/Debuggers
-Requires: libunwind = %{PACKAGE_VERSION}
+Requires: libunwind = %{version}-%{release}
 %description devel
 The libunwind-devel package includes the libraries and header files for
 libunwind.
@@ -82,6 +82,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Fri Dec  4 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.13.20090430betagit4b8404d1
+- The devel package now requires also base package's %{release}.
+- Update the obsolete macro %%{package_version}.
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.12.20090430betagit4b8404d1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
