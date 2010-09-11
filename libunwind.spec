@@ -1,27 +1,23 @@
 # rpmbuild parameters:
 # --without check: Do not run the testsuite.  Default is to run it.
 
-# Define this if you want to skip the strip step and preserve debug info.
-# Useful for testing. 
-#define __debug_install_post : > %{_builddir}/%{?buildsubdir}/debugfiles.list
-
 Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.13.%{snapshot}%{?dist}
+Release: 0.14.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
+#Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
-Conflicts: gdb < 6.6-9
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
-%define _host %{_target_platform}
+%global _host %{_target_platform}
 
 %description
 Libunwind provides a C ABI to determine the call-chain of a program.
@@ -31,6 +27,7 @@ This version of libunwind is targetted for the ia64 platform.
 Summary: Development package for libunwind
 Group: Development/Debuggers
 Requires: libunwind = %{version}-%{release}
+
 %description devel
 The libunwind-devel package includes the libraries and header files for
 libunwind.
@@ -46,11 +43,12 @@ autoheader
 automake --add-missing
 autoconf
 %configure --disable-static --enable-shared
-make
+make %{?_smp_mflags}
 
 %install
-%makeinstall
-rm -f $RPM_BUILD_ROOT/%{_libdir}/libunwind*.{la,a}
+make install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 %check
 %if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
@@ -61,20 +59,17 @@ echo ====================TESTING END=====================
 echo ====================TESTSUITE DISABLED=========================
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc COPYING README NEWS
 %{_libdir}/libunwind*.so.*
 
 %files devel
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_libdir}/libunwind*.so
 %{_mandir}/*/*
 # <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
@@ -82,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sat Sep 11 2010 Parag Nemade <paragn AT fedoraproject.org> 0.99-0.14.20090430betagit4b8404d1.fc15
+- Merge-review cleanup (#226052)
+
 * Fri Dec  4 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.13.20090430betagit4b8404d1
 - The devel package now requires also base package's %{release}.
 - Update the obsolete macro %%{package_version}.
