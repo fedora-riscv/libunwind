@@ -9,7 +9,7 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.13.%{snapshot}%{?dist}
+Release: 0.13.%{snapshot}%{?dist}.1
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Sep 29 2010 jkeating - 0.99-0.13.20090430betagit4b8404d1.1
+- Rebuilt for gcc bug 634757
+
 * Fri Dec  4 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.13.20090430betagit4b8404d1
 - The devel package now requires also base package's %{release}.
 - Update the obsolete macro %%{package_version}.
