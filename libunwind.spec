@@ -5,7 +5,7 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.15.%{snapshot}%{?dist}
+Release: 0.16.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -77,6 +77,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.16.20090430betagit4b8404d1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Sep 29 2010 jkeating - 0.99-0.15.20090430betagit4b8404d1
 - Rebuilt for gcc bug 634757
 
