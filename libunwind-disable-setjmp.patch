@@ -4,209 +4,168 @@ match src/setjmp/setjmp.c + include/tdep-x86_64/jmpbuf.h .
 
 google-perftools link only with libunwind.so.7 .
 
---- a/src/Makefile.am
-+++ b/src/Makefile.am
-@@ -12,7 +12,7 @@ lib_LTLIBRARIES_cdep_setjmp	=
- else
- LIBRARIES_cdep			= libunwind-ptrace.a
- lib_LTLIBRARIES_cdep		= libunwind.la
--lib_LTLIBRARIES_cdep_setjmp	= libunwind-setjmp.la
-+lib_LTLIBRARIES_cdep_setjmp	= #libunwind-setjmp.la
+diff -dup -rup libunwind-20110424git1e10c293-orig//src/Makefile.am libunwind-20110424git1e10c293//src/Makefile.am
+--- libunwind-20110424git1e10c293-orig//src/Makefile.am	2011-04-24 19:56:54.000000000 +0200
++++ libunwind-20110424git1e10c293//src/Makefile.am	2011-04-24 21:56:15.000000000 +0200
+@@ -1,5 +1,5 @@
+ SOVERSION=7:0:0		# See comments at end of file.
+-SETJMP_SO_VERSION=0:0:0
++#SETJMP_SO_VERSION=0:0:0
+ #
+ # Don't link with start-files since we don't use any constructors/destructors:
+ #
+@@ -9,7 +9,7 @@ lib_LIBRARIES =
+ lib_LTLIBRARIES =
+ if !REMOTE_ONLY
+ lib_LIBRARIES += libunwind-ptrace.a
+-lib_LTLIBRARIES += libunwind.la libunwind-setjmp.la
++lib_LTLIBRARIES += libunwind.la #libunwind-setjmp.la
  endif
  
- ### libunwind-ptrace:
-@@ -27,21 +27,21 @@ libunwind_ptrace_a_SOURCES =						  \
- 	ptrace/_UPT_reg_offset.c ptrace/_UPT_resume.c
+ noinst_HEADERS =
+@@ -27,8 +27,8 @@ libunwind_ptrace_a_SOURCES =						  \
+ noinst_HEADERS += ptrace/_UPT_internal.h
  
  ### libunwind-setjmp:
 -libunwind_setjmp_la_LDFLAGS		= $(COMMON_SO_LDFLAGS)		     \
 -					  -version-info $(SETJMP_SO_VERSION)
--libunwind_setjmp_la_LIBADD		= libunwind-$(arch).la -lc
--libunwind_setjmp_la_SOURCES_common	= setjmp/setjmp_i.h 	\
--					  setjmp/longjmp.c	\
--					  setjmp/siglongjmp.c
--libunwind_setjmp_la_SOURCES_arm		= arm/siglongjmp.S
--libunwind_setjmp_la_SOURCES_ia64	= ia64/setjmp.S  ia64/sigsetjmp.S  \
--					  ia64/longjmp.S ia64/siglongjmp.S
--libunwind_setjmp_la_SOURCES_hppa	= hppa/siglongjmp.S
--libunwind_setjmp_la_SOURCES_mips	= mips/siglongjmp.S
--libunwind_setjmp_la_SOURCES_x86		= x86/longjmp.S x86/siglongjmp.S
--libunwind_setjmp_la_SOURCES_x86_64	= x86_64/longjmp.S x86_64/siglongjmp.S
--libunwind_setjmp_la_SOURCES_ppc64       = ppc/longjmp.S ppc/siglongjmp.S
--libunwind_setjmp_la_SOURCES_ppc32       = ppc/longjmp.S ppc/siglongjmp.S
 +#libunwind_setjmp_la_LDFLAGS		= $(COMMON_SO_LDFLAGS)		     \
 +#					  -version-info $(SETJMP_SO_VERSION)
-+#libunwind_setjmp_la_LIBADD		= libunwind-$(arch).la -lc
-+#libunwind_setjmp_la_SOURCES_common	= setjmp/setjmp_i.h 	\
-+#					  setjmp/longjmp.c	\
+ 
+ if USE_ELF32
+ LIBUNWIND_ELF = libunwind-elf32.la
+@@ -40,12 +40,12 @@ if USE_ELFXX
+ LIBUNWIND_ELF = libunwind-elfxx.la
+ endif
+ 
+-libunwind_setjmp_la_LIBADD		= $(LIBUNWIND_ELF)	\
+-					  libunwind-$(arch).la	\
+-					  libunwind.la -lc
+-libunwind_setjmp_la_SOURCES		= setjmp/longjmp.c	\
+-					  setjmp/siglongjmp.c
+-noinst_HEADERS				+= setjmp/setjmp_i.h
++#libunwind_setjmp_la_LIBADD		= $(LIBUNWIND_ELF)	\
++#					  libunwind-$(arch).la	\
++#					  libunwind.la -lc
++#libunwind_setjmp_la_SOURCES		= setjmp/longjmp.c	\
 +#					  setjmp/siglongjmp.c
-+#libunwind_setjmp_la_SOURCES_arm		= arm/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_ia64	= ia64/setjmp.S  ia64/sigsetjmp.S  \
-+#					  ia64/longjmp.S ia64/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_hppa	= hppa/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_mips	= mips/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_x86		= x86/longjmp.S x86/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_x86_64	= x86_64/longjmp.S x86_64/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_ppc64       = ppc/longjmp.S ppc/siglongjmp.S
-+#libunwind_setjmp_la_SOURCES_ppc32       = ppc/longjmp.S ppc/siglongjmp.S
++#noinst_HEADERS				+= setjmp/setjmp_i.h
  
  ### libunwind:
- 
-@@ -359,8 +359,8 @@ if ARCH_ARM
+ libunwind_la_LIBADD =
+@@ -369,7 +369,7 @@ if ARCH_ARM
  if !REMOTE_ONLY
-  libunwind_arm_la_LIBADD = libunwind.la -lc
+  libunwind_arm_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_arm)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_arm)
+- libunwind_setjmp_la_SOURCES += arm/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += arm/siglongjmp.S
  else
  if ARCH_IA64
   ia64_mk_Gcursor_i_SOURCES = ia64/mk_Gcursor_i.c
-@@ -378,8 +378,8 @@ Lcursor_i.h: ia64/mk_Lcursor_i
+@@ -389,8 +389,8 @@ Lcursor_i.h: ia64/mk_Lcursor_i
  if !REMOTE_ONLY
-  libunwind_ia64_la_LIBADD = libunwind.la -lc
+  libunwind_ia64_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_ia64)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_ia64)
+- libunwind_setjmp_la_SOURCES += ia64/setjmp.S  ia64/sigsetjmp.S  \
+-				ia64/longjmp.S ia64/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += ia64/setjmp.S  ia64/sigsetjmp.S  \
++#				ia64/longjmp.S ia64/siglongjmp.S
  else
  if ARCH_HPPA
-  lib_LTLIBRARIES_arch = libunwind-hppa.la
-@@ -389,8 +389,8 @@ if ARCH_HPPA
+  lib_LTLIBRARIES += libunwind-hppa.la
+@@ -402,7 +402,7 @@ if ARCH_HPPA
  if !REMOTE_ONLY
-  libunwind_hppa_la_LIBADD = libunwind.la -lc
+  libunwind_hppa_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_hppa)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_hppa)
+- libunwind_setjmp_la_SOURCES += hppa/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += hppa/siglongjmp.S
  else
  if ARCH_MIPS
-  lib_LTLIBRARIES_arch = libunwind-mips.la
-@@ -400,8 +400,8 @@ if ARCH_MIPS
+  lib_LTLIBRARIES += libunwind-mips.la
+@@ -414,7 +414,7 @@ if ARCH_MIPS
  if !REMOTE_ONLY
-  libunwind_mips_la_LIBADD = libunwind.la -lc
+  libunwind_mips_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_mips)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_mips)
+- libunwind_setjmp_la_SOURCES += mips/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += mips/siglongjmp.S
  else
  if ARCH_X86
-  lib_LTLIBRARIES_arch = libunwind-x86.la
-@@ -411,8 +411,8 @@ if ARCH_X86
+  lib_LTLIBRARIES += libunwind-x86.la
+@@ -426,7 +426,7 @@ if ARCH_X86
  if !REMOTE_ONLY
-  libunwind_x86_la_LIBADD = libunwind.la -lc
+  libunwind_x86_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_x86)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_x86)
+- libunwind_setjmp_la_SOURCES += x86/longjmp.S x86/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += x86/longjmp.S x86/siglongjmp.S
  else
  if ARCH_X86_64
-  lib_LTLIBRARIES_arch = libunwind-x86_64.la
-@@ -422,8 +422,8 @@ if ARCH_X86_64
+  lib_LTLIBRARIES += libunwind-x86_64.la
+@@ -438,7 +438,7 @@ if ARCH_X86_64
  if !REMOTE_ONLY
-  libunwind_x86_64_la_LIBADD = libunwind.la -lc
+  libunwind_x86_64_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
--				  $(libunwind_setjmp_la_SOURCES_x86_64)
-+# libunwind_setjmp_la_SOURCES	= $(libunwind_setjmp_la_SOURCES_common) \
-+#				  $(libunwind_setjmp_la_SOURCES_x86_64)
+- libunwind_setjmp_la_SOURCES += x86_64/longjmp.S x86_64/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += x86_64/longjmp.S x86_64/siglongjmp.S
  else
  if ARCH_PPC32
-  lib_LTLIBRARIES_arch = libunwind-ppc32.la
-@@ -433,8 +433,8 @@ if ARCH_PPC32
+  lib_LTLIBRARIES += libunwind-ppc32.la
+@@ -450,7 +450,7 @@ if ARCH_PPC32
  if !REMOTE_ONLY
-  libunwind_ppc32_la_LIBADD = libunwind.la -lc
+  libunwind_ppc32_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES    = $(libunwind_setjmp_la_SOURCES_common) \
--                                  $(libunwind_setjmp_la_SOURCES_ppc32)
-+# libunwind_setjmp_la_SOURCES    = $(libunwind_setjmp_la_SOURCES_common) \
-+#                                  $(libunwind_setjmp_la_SOURCES_ppc32)
+- libunwind_setjmp_la_SOURCES += ppc/longjmp.S ppc/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += ppc/longjmp.S ppc/siglongjmp.S
  else
  if ARCH_PPC64
-  lib_LTLIBRARIES_arch = libunwind-ppc64.la
-@@ -444,8 +444,8 @@ if ARCH_PPC64
+  lib_LTLIBRARIES += libunwind-ppc64.la
+@@ -462,7 +462,7 @@ if ARCH_PPC64
  if !REMOTE_ONLY
-  libunwind_ppc64_la_LIBADD = libunwind.la -lc
+  libunwind_ppc64_la_LIBADD += libunwind.la -lc
  endif
-- libunwind_setjmp_la_SOURCES    = $(libunwind_setjmp_la_SOURCES_common) \
--                                  $(libunwind_setjmp_la_SOURCES_ppc64)
-+# libunwind_setjmp_la_SOURCES    = $(libunwind_setjmp_la_SOURCES_common) \
-+#                                  $(libunwind_setjmp_la_SOURCES_ppc64)
+- libunwind_setjmp_la_SOURCES += ppc/longjmp.S ppc/siglongjmp.S
++# libunwind_setjmp_la_SOURCES += ppc/longjmp.S ppc/siglongjmp.S
  
  endif # ARCH_PPC64
  endif # ARCH_PPC32
-@@ -466,7 +466,7 @@ libunwind_la_LIBADD  = -lc $(LIBCRTS)
- 
- lib_LIBRARIES = $(LIBRARIES_cdep)
- lib_LTLIBRARIES = $(lib_LTLIBRARIES_cdep) $(lib_LTLIBRARIES_arch) \
--		  $(lib_LTLIBRARIES_cdep_setjmp)
-+		  # $(lib_LTLIBRARIES_cdep_setjmp)
- 
- AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/tdep-$(arch) -I.
- AM_CCASFLAGS = $(AM_CPPFLAGS)
-@@ -488,16 +488,16 @@ EXTRA_DIST =	elfxx.h elfxx.c unwind/unwind-internal.h	\
- 		$(libunwind_mips_la_SOURCES_mips)		\
- 		$(libunwind_x86_la_SOURCES_x86)			\
- 		$(libunwind_x86_64_la_SOURCES_x86_64)		\
--		$(libunwind_ptrace_a_SOURCES)			\
--		$(libunwind_setjmp_la_SOURCES_common)		\
--		$(libunwind_setjmp_la_SOURCES_arm)		\
--		$(libunwind_setjmp_la_SOURCES_hppa)		\
--		$(libunwind_setjmp_la_SOURCES_ia64)		\
--		$(libunwind_setjmp_la_SOURCES_mips)		\
--		$(libunwind_setjmp_la_SOURCES_x86)		\
--		$(libunwind_setjmp_la_SOURCES_x86_64)		\
--		$(libunwind_setjmp_la_SOURCES_ppc32)		\
--		$(libunwind_setjmp_la_SOURCES_ppc64)
-+		$(libunwind_ptrace_a_SOURCES)
-+#		$(libunwind_setjmp_la_SOURCES_common)		\
-+#		$(libunwind_setjmp_la_SOURCES_arm)		\
-+#		$(libunwind_setjmp_la_SOURCES_hppa)		\
-+#		$(libunwind_setjmp_la_SOURCES_ia64)		\
-+#		$(libunwind_setjmp_la_SOURCES_mips)		\
-+#		$(libunwind_setjmp_la_SOURCES_x86)		\
-+#		$(libunwind_setjmp_la_SOURCES_x86_64)		\
-+#		$(libunwind_setjmp_la_SOURCES_ppc32)		\
-+#		$(libunwind_setjmp_la_SOURCES_ppc64)
- 
- 
- # The -version-info flag accepts an argument of the form
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -24,7 +24,8 @@ if ARCH_IA64
+diff -dup -rup libunwind-20110424git1e10c293-orig//tests/Makefile.am libunwind-20110424git1e10c293//tests/Makefile.am
+--- libunwind-20110424git1e10c293-orig//tests/Makefile.am	2011-04-24 19:56:54.000000000 +0200
++++ libunwind-20110424git1e10c293//tests/Makefile.am	2011-04-24 21:57:31.000000000 +0200
+@@ -27,7 +27,7 @@ if ARCH_IA64
  			Gia64-test-nat Lia64-test-nat			\
  			Gia64-test-rbs Lia64-test-rbs			\
  			Gia64-test-readonly Lia64-test-readonly		\
 -			ia64-test-setjmp ia64-test-sig
 +			ia64-test-sig
-+# ia64-test-setjmp
  else
  if ARCH_PPC64
- if USE_ALTIVEC 
-@@ -40,8 +41,9 @@ endif #ARCH_IA64
- 			Gtest-resume-sig Ltest-resume-sig		 \
+ if USE_ALTIVEC
+@@ -44,8 +45,8 @@ endif #ARCH_IA64
  			Gtest-dyn1 Ltest-dyn1				 \
+ 			Gtest-trace Ltest-trace				 \
  			test-async-sig test-flush-cache test-init-remote \
 -			test-mem test-setjmp test-ptrace		 \
-+			test-mem test-ptrace				 \
- 			Ltest-nomalloc
-+# test-setjmp
++			test-mem test-ptrace		 \
+ 			Ltest-nomalloc Ltest-nocalloc rs-race
   noinst_PROGRAMS_cdep = forker mapper test-ptrace-misc test-varargs	\
- 			Gperf-simple Lperf-simple
+ 			Gperf-simple Lperf-simple			\
+ 			Gperf-trace Lperf-trace
+@@ -120,8 +122,8 @@ if USE_ELFXX
+ LIBUNWIND_ELF = $(top_builddir)/src/libunwind-elfxx.la
+ endif
  
-@@ -93,8 +95,8 @@ test_ptrace_misc_SOURCES = test-ptrace-misc.c ident.c
- LIBUNWIND = ../src/libunwind-$(arch).la $(LIBUNWIND_local)
- LDADD = $(LIBUNWIND)
+-LIBUNWIND_setjmp = $(top_builddir)/src/libunwind-setjmp.la	\
+-		   $(LIBUNWIND_ELF) $(LIBUNWIND)
++#LIBUNWIND_setjmp = $(top_builddir)/src/libunwind-setjmp.la	\
++#		   $(LIBUNWIND_ELF) $(LIBUNWIND)
  
--test_setjmp_LDADD = ../src/libunwind-setjmp.la $(LIBUNWIND_local)
--ia64_test_setjmp_LDADD = ../src/libunwind-setjmp.la $(LIBUNWIND_local)
-+# test_setjmp_LDADD = ../src/libunwind-setjmp.la $(LIBUNWIND_local)
-+# ia64_test_setjmp_LDADD = ../src/libunwind-setjmp.la $(LIBUNWIND_local)
- test_ptrace_LDADD = ../src/libunwind-ptrace.a $(LIBUNWIND)
- Ltest_concurrent_LDADD = $(LIBUNWIND) -lpthread
- Gtest_concurrent_LDADD = $(LIBUNWIND) -lpthread
+ test_async_sig_LDADD = $(LIBUNWIND_local) -lpthread
+ test_flush_cache_LDADD = $(LIBUNWIND_local)
+@@ -156,6 +158,6 @@ Lperf_simple_LDADD = $(LIBUNWIND_local)
+ Ltest_trace_LDADD = $(LIBUNWIND_local)
+ Lperf_trace_LDADD = $(LIBUNWIND_local)
+ 
+-test_setjmp_LDADD = $(LIBUNWIND_setjmp)
+-ia64_test_setjmp_LDADD = $(LIBUNWIND_setjmp)
++#test_setjmp_LDADD = $(LIBUNWIND_setjmp)
++#ia64_test_setjmp_LDADD = $(LIBUNWIND_setjmp)
+ 
