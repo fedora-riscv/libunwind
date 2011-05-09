@@ -5,12 +5,13 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20110424git1e10c293
-Release: 1.%{snapshot}%{?dist}
+Release: 2.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
+Patch2: libunwind-install-ptrace.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -35,6 +36,7 @@ libunwind.
 %prep
 %setup -q -n libunwind-%{snapshot}
 %patch1 -p1
+%patch2 -p1
 
 %build
 aclocal
@@ -42,13 +44,20 @@ libtoolize --force
 autoheader
 automake --add-missing
 autoconf
-%configure --disable-static --enable-shared
+%configure --enable-static --enable-shared
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
+
+# /usr/include/libunwind-ptrace.h
+# [...] aren't really part of the libunwind API.  They are implemented in
+# a archive library called libunwind-ptrace.a.
+mv -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a-save
+rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind*.a
+mv -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a-save $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace*.so*
 
 %check
 %if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
@@ -71,12 +80,16 @@ echo ====================TESTSUITE DISABLED=========================
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/libunwind*.so
+%{_libdir}/libunwind-ptrace.a
 %{_mandir}/*/*
 # <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
 %{_includedir}/unwind.h
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon May  9 2011 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-2.20110424git1e10c293
+- Install static libunwind-ptrace library into system (for ltrace, BZ 703159).
+
 * Sun Apr 24 2011 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-1.20110424git1e10c293
 - Rebase to the upstream post-0.99 snapshot (BZ 697453).
 
