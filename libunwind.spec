@@ -5,7 +5,7 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20110424git1e10c293
-Release: 2.%{snapshot}%{?dist}
+Release: 3.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
@@ -13,7 +13,7 @@ Source: libunwind-%{snapshot}.tar.bz2
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-install-ptrace.patch
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
+ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
 
@@ -87,6 +87,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Jun 02 2011 Paul Whalen <paul.whalen@senecac.on.ca> - 0.99-3.20110424git1e10c293
+- Added arm macro to ExclusiveArch
+
 * Mon May  9 2011 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.99-2.20110424git1e10c293
 - Install static libunwind-ptrace library into system (for ltrace, BZ 703159).
 
