@@ -9,13 +9,13 @@ Summary: An unwinding library
 Name: libunwind
 Version: 0.99
 %define snapshot 20090430betagit4b8404d1
-Release: 0.13.%{snapshot}%{?dist}
+Release: 0.14.%{snapshot}%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: libunwind-%{snapshot}.tar.bz2
 Patch1: libunwind-disable-setjmp.patch
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: arm hppa ia64 mips ppc ppc64 %{ix86} x86_64
+ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
 Conflicts: gdb < 6.6-9
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Jun 02 2011 Paul Whalen <paul.whalen@senecac.on.ca> - 0.99-0.14.20090430betagit4b8404d1
+- Added arm macro to ExclusiveArch
+
 * Fri Dec  4 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-0.13.20090430betagit4b8404d1
 - The devel package now requires also base package's %{release}.
 - Update the obsolete macro %%{package_version}.
