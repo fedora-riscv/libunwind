@@ -3,12 +3,11 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 0.99
-%define snapshot 20110424git1e10c293
-Release: 3.%{snapshot}%{?dist}
+Version: 1.0.1
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
-Source: libunwind-%{snapshot}.tar.bz2
+Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-install-ptrace.patch
@@ -34,7 +33,7 @@ The libunwind-devel package includes the libraries and header files for
 libunwind.
 
 %prep
-%setup -q -n libunwind-%{snapshot}
+%setup -q
 %patch1 -p1
 %patch2 -p1
 
@@ -87,6 +86,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Sep 15 2011 Jan Kratochvil <jan.kratochvil@redhat.com> - 1.0.1-1.fc17
+- Upgrade to the upstream release. (BZ 738595).
+- Use official distribution URL for %%{source}.
+
 * Thu Jun 02 2011 Paul Whalen <paul.whalen@senecac.on.ca> - 0.99-3.20110424git1e10c293
 - Added arm macro to ExclusiveArch
 
