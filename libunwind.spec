@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -86,6 +86,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Sep 15 2011 Jan Kratochvil <jan.kratochvil@redhat.com> - 1.0.1-1.fc17
 - Upgrade to the upstream release. (BZ 738595).
 - Use official distribution URL for %%{source}.
