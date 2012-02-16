@@ -1,0 +1,59 @@
+--- libunwind-1.0.1/src/arm/init.h.orig	2012-02-15 18:33:08.000000000 -0500
++++ libunwind-1.0.1/src/arm/init.h	2012-02-15 18:29:19.000000000 -0500
+@@ -29,26 +29,26 @@
+ {
+   int ret, i;
+ 
+-  c->dwarf.loc[R0] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R0);
+-  c->dwarf.loc[R1] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R1);
+-  c->dwarf.loc[R2] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R2);
+-  c->dwarf.loc[R3] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R3);
+-  c->dwarf.loc[R4] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R4);
+-  c->dwarf.loc[R5] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R5);
+-  c->dwarf.loc[R6] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R6);
+-  c->dwarf.loc[R7] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R7);
+-  c->dwarf.loc[R8] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R8);
+-  c->dwarf.loc[R9] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R9);
+-  c->dwarf.loc[R10] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R10);
+-  c->dwarf.loc[R11] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R11);
+-  c->dwarf.loc[R12] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R12);
+-  c->dwarf.loc[R13] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R13);
+-  c->dwarf.loc[R14] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R14);
+-  c->dwarf.loc[R15] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R15);
+-  for (i = R15 + 1; i < DWARF_NUM_PRESERVED_REGS; ++i)
++  c->dwarf.loc[REG_R0] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R0);
++  c->dwarf.loc[REG_R1] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R1);
++  c->dwarf.loc[REG_R2] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R2);
++  c->dwarf.loc[REG_R3] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R3);
++  c->dwarf.loc[REG_R4] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R4);
++  c->dwarf.loc[REG_R5] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R5);
++  c->dwarf.loc[REG_R6] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R6);
++  c->dwarf.loc[REG_R7] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R7);
++  c->dwarf.loc[REG_R8] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R8);
++  c->dwarf.loc[REG_R9] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R9);
++  c->dwarf.loc[REG_R10] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R10);
++  c->dwarf.loc[REG_R11] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R11);
++  c->dwarf.loc[REG_R12] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R12);
++  c->dwarf.loc[REG_R13] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R13);
++  c->dwarf.loc[REG_R14] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R14);
++  c->dwarf.loc[REG_R15] = DWARF_REG_LOC (&c->dwarf, UNW_ARM_R15);
++  for (i = REG_R15 + 1; i < DWARF_NUM_PRESERVED_REGS; ++i)
+     c->dwarf.loc[i] = DWARF_NULL_LOC;
+ 
+-  ret = dwarf_get (&c->dwarf, c->dwarf.loc[R15], &c->dwarf.ip);
++  ret = dwarf_get (&c->dwarf, c->dwarf.loc[REG_R15], &c->dwarf.ip);
+   if (ret < 0)
+     return ret;
+ 
+--- libunwind-1.0.1/src/arm/Gglobal.c.orig	2012-02-15 18:33:21.000000000 -0500
++++ libunwind-1.0.1/src/arm/Gglobal.c	2012-02-15 18:28:27.000000000 -0500
+@@ -37,7 +37,8 @@
+ 
+ HIDDEN uint8_t dwarf_to_unw_regnum_map[16] =
+   {
+-    R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15
++    REG_R0, REG_R1, REG_R2, REG_R3, REG_R4, REG_R5, REG_R6, REG_R7,
++    REG_R8, REG_R9, REG_R10, REG_R11, REG_R12, REG_R13, REG_R14, REG_R15
+   };
+ 
+ HIDDEN void

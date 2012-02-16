@@ -4,13 +4,14 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-install-ptrace.patch
+Patch3: libunwind-arm-register-rename.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -36,6 +37,7 @@ libunwind.
 %setup -q
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1 -b .arm
 
 %build
 aclocal
@@ -86,6 +88,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Feb 15 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 1.0.1-3
+- Add patch to fix build on ARM
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
