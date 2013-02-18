@@ -3,15 +3,13 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 1.0.1
-Release: 5%{?dist}
+Version: 1.1
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
-Patch2: libunwind-install-ptrace.patch
-Patch3: libunwind-arm-register-rename.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -22,7 +20,6 @@ BuildRequires: automake libtool autoconf
 
 %description
 Libunwind provides a C ABI to determine the call-chain of a program.
-This version of libunwind is targetted for the ia64 platform.
 
 %package devel
 Summary: Development package for libunwind
@@ -36,8 +33,6 @@ libunwind.
 %prep
 %setup -q
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1 -b .arm
 
 %build
 aclocal
@@ -82,12 +77,19 @@ echo ====================TESTSUITE DISABLED=========================
 %defattr(-,root,root,-)
 %{_libdir}/libunwind*.so
 %{_libdir}/libunwind-ptrace.a
+%{_libdir}/pkgconfig/libunwind*.pc
 %{_mandir}/*/*
 # <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
 %{_includedir}/unwind.h
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Feb 18 2013 Kyle McMartin <kmcmarti@redhat.com> 1.1-1
+- Update to upstream v1.1
+- libunwind-install-ptrace.patch: drop upstream patch
+- libunwind-arm-register-rename.patch: fixed upstream
+- Add pkg-config files to libunwind-devel
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
