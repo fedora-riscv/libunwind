@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.0.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -12,6 +12,7 @@ Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-install-ptrace.patch
 Patch3: libunwind-arm-register-rename.patch
+Patch4: libunwind-add-pkgconfig.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -38,6 +39,7 @@ libunwind.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1 -b .arm
+%patch4 -p1
 
 %build
 aclocal
@@ -86,8 +88,13 @@ echo ====================TESTSUITE DISABLED=========================
 # <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
 %{_includedir}/unwind.h
 %{_includedir}/libunwind*.h
+%{_libdir}/pkgconfig/libunwind*.pc
 
 %changelog
+* Mon Mar 04 2013 Kyle McMartin <kmcmarti@redhat.com> - 1.0.1-5
+- Add backported patch from Peter Hutterer to add pkgconfig files for
+  libunwind. (rhbz#917402)
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

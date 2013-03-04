@@ -1,0 +1,132 @@
+From a729e4c008b595b085c4bf34153ecd0ff5c5d370 Mon Sep 17 00:00:00 2001
+From: Alexander Toresson <alexander.toresson@gmail.com>
+Date: Sat, 15 Sep 2012 11:09:32 -0700
+Subject: [PATCH] Create and install pkg-config .pc files
+
+[Edit: renamed to libunwind-generic.pc and some .pc files
+ created only when needed -- asharma@fb.com]
+(cherry picked from commit ea5e90fd9f6ef9840c71b8c4a304793547263de3)
+
+[backport: unconditionally add libunwind-coredump, would require
+3a5d7ff694aa]
+---
+ configure.in                          |  3 +++
+ src/Makefile.am                       | 10 ++++++++++
+ src/coredump/libunwind-coredump.pc.in | 10 ++++++++++
+ src/libunwind-generic.pc.in           | 10 ++++++++++
+ src/ptrace/libunwind-ptrace.pc.in     | 10 ++++++++++
+ src/setjmp/libunwind-setjmp.pc.in     | 10 ++++++++++
+ src/unwind/libunwind.pc.in            |  9 +++++++++
+ 7 files changed, 62 insertions(+)
+ create mode 100644 src/coredump/libunwind-coredump.pc.in
+ create mode 100644 src/libunwind-generic.pc.in
+ create mode 100644 src/ptrace/libunwind-ptrace.pc.in
+ create mode 100644 src/setjmp/libunwind-setjmp.pc.in
+ create mode 100644 src/unwind/libunwind.pc.in
+
+Index: libunwind-1.0.1/configure.in
+===================================================================
+--- libunwind-1.0.1.orig/configure.in	2011-09-10 23:06:41.000000000 -0400
++++ libunwind-1.0.1/configure.in	2013-03-04 10:59:36.144104019 -0500
+@@ -297,4 +297,7 @@
+ 
+ AC_CONFIG_FILES(Makefile src/Makefile tests/Makefile tests/check-namespace.sh
+ 		doc/Makefile doc/common.tex include/libunwind-common.h)
++AC_CONFIG_FILES(src/unwind/libunwind.pc src/coredump/libunwind-coredump.pc
++		src/ptrace/libunwind-ptrace.pc
++		src/libunwind-generic.pc)
+ AC_OUTPUT
+Index: libunwind-1.0.1/src/coredump/libunwind-coredump.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libunwind-1.0.1/src/coredump/libunwind-coredump.pc.in	2013-03-04 10:55:26.848036170 -0500
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libunwind-coredump
++Description: libunwind coredump library
++Version: @VERSION@
++Requires: libunwind-@arch@ libunwind
++Libs: -L${libdir} -lunwind-coredump
+Index: libunwind-1.0.1/src/libunwind-generic.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libunwind-1.0.1/src/libunwind-generic.pc.in	2013-03-04 10:55:26.848036170 -0500
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libunwind-generic
++Description: libunwind generic library
++Version: @VERSION@
++Requires: libunwind
++Libs: -L${libdir} -lunwind-generic
+Index: libunwind-1.0.1/src/ptrace/libunwind-ptrace.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libunwind-1.0.1/src/ptrace/libunwind-ptrace.pc.in	2013-03-04 10:55:26.849036174 -0500
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libunwind-ptrace
++Description: libunwind ptrace library
++Version: @VERSION@
++Requires: libunwind-@arch@ libunwind
++Libs: -L${libdir} -lunwind-ptrace
+Index: libunwind-1.0.1/src/setjmp/libunwind-setjmp.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libunwind-1.0.1/src/setjmp/libunwind-setjmp.pc.in	2013-03-04 10:55:26.849036174 -0500
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libunwind-setjmp
++Description: libunwind setjmp library
++Version: @VERSION@
++Requires: libunwind
++Libs: -L${libdir} -lunwind-setjmp
+Index: libunwind-1.0.1/src/unwind/libunwind.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libunwind-1.0.1/src/unwind/libunwind.pc.in	2013-03-04 10:55:26.850036178 -0500
+@@ -0,0 +1,9 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libunwind
++Description: libunwind base library
++Version: @VERSION@
++Libs: -L${libdir} -lunwind
+Index: libunwind-1.0.1/src/Makefile.am
+===================================================================
+--- libunwind-1.0.1.orig/src/Makefile.am	2013-03-04 10:55:21.000000000 -0500
++++ libunwind-1.0.1/src/Makefile.am	2013-03-04 10:59:23.538050027 -0500
+@@ -15,6 +15,15 @@
+ noinst_HEADERS =
+ noinst_LTLIBRARIES =
+ 
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = libunwind-generic.pc
++
++if !REMOTE_ONLY
++pkgconfig_DATA += unwind/libunwind.pc ptrace/libunwind-ptrace.pc
++endif
++
++pkgconfig_DATA += coredump/libunwind-coredump.pc
++
+ ### libunwind-ptrace:
+ libunwind_ptrace_la_SOURCES =						  \
+ 	ptrace/_UPT_elf.c						  \
