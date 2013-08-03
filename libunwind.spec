@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -86,6 +86,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Mon Jun 03 2013 Kyle McMartin <kmcmarti@redhat.com> 1.1-2
 - Add aarch64 support from backported ac6c0a65. (Mark Salter)
   (rhbz#969689)
