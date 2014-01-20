@@ -4,13 +4,14 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-aarch64.patch
+Patch3: libunwind-fix-ppc64_test_altivec.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc ppc64 %{ix86} x86_64
 
@@ -35,6 +36,7 @@ libunwind.
 %setup -q
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 aclocal
@@ -86,6 +88,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Jan 20 2014 Kyle McMartin <kmcmarti@redhat.com> 1.1-3
+- Link test_ppc64_altivec against libunwind in tests/Makefile.am to fix build
+  on ppc64.
+
 * Mon Jun 03 2013 Kyle McMartin <kmcmarti@redhat.com> 1.1-2
 - Add aarch64 support from backported ac6c0a65. (Mark Salter)
   (rhbz#969689)
