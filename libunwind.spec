@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -13,7 +13,7 @@ Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-aarch64.patch
 Patch3: libunwind-fix-ppc64_test_altivec.patch
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc ppc64 %{ix86} x86_64
+ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
 
@@ -88,6 +88,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Tue May 13 2014 Jaromir Capik <jcapik@redhat.com> - 1.1-5
+- Replacing ppc64 with the power64 macro (#1051641)
+
 * Mon Jan 20 2014 Kyle McMartin <kmcmarti@redhat.com> 1.1-4
 - Link test_ppc64_altivec against libunwind in tests/Makefile.am to fix build
   on ppc64.
