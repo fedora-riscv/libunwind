@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -12,6 +12,7 @@ Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-aarch64.patch
 Patch3: libunwind-fix-ppc64_test_altivec.patch
+Patch4: libunwind-arm-default-to-exidx.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
@@ -37,6 +38,7 @@ libunwind.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1 -b .default-to-exidx
 
 %build
 aclocal
@@ -88,6 +90,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Tue Jun  2 2015 Tom Callaway <spot@fedoraproject.org> - 1.1-8 
+- default arm unwinding method to exidx, old default of dwarf never works on Fedora
+  (#1226806)
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
