@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -90,6 +90,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Tue Jun  2 2015 Tom Callaway <spot@fedoraproject.org> - 1.1-8 
 - default arm unwinding method to exidx, old default of dwarf never works on Fedora
   (#1226806)
