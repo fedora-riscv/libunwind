@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.1
-Release: 3%{?dist}
+Release: 10%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -12,8 +12,10 @@ Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}
 Patch1: libunwind-disable-setjmp.patch
 Patch2: libunwind-aarch64.patch
 Patch3: libunwind-fix-ppc64_test_altivec.patch
+Patch4: libunwind-arm-default-to-exidx.patch
+Patch5: libunwind-1.1-fix-CVE-2015-3239.patch
 URL: http://savannah.nongnu.org/projects/libunwind
-ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc ppc64 %{ix86} x86_64
+ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf
 
@@ -37,6 +39,8 @@ libunwind.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1 -b .default-to-exidx
+%patch5 -p1 -b .CVE-2015-3239
 
 %build
 aclocal
@@ -88,9 +92,31 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
-* Mon Jan 20 2014 Kyle McMartin <kmcmarti@redhat.com> 1.1-3
+* Fri Jul 10 2015 Tom Callaway <spot@fedoraproject.org> - 1.1-10
+- fix CVE-2015-3239
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Jun  2 2015 Tom Callaway <spot@fedoraproject.org> - 1.1-8 
+- default arm unwinding method to exidx, old default of dwarf never works on Fedora
+  (#1226806)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 13 2014 Jaromir Capik <jcapik@redhat.com> - 1.1-5
+- Replacing ppc64 with the power64 macro (#1051641)
+
+* Mon Jan 20 2014 Kyle McMartin <kmcmarti@redhat.com> 1.1-4
 - Link test_ppc64_altivec against libunwind in tests/Makefile.am to fix build
   on ppc64.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Mon Jun 03 2013 Kyle McMartin <kmcmarti@redhat.com> 1.1-2
 - Add aarch64 support from backported ac6c0a65. (Mark Salter)
