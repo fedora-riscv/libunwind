@@ -3,21 +3,17 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 1.1
-Release: 12%{?dist}
+Version: 1.2
+Release: 1%{?dist}
 License: BSD
 Group: Development/Debuggers
-Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
+Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
-Patch1: libunwind-disable-setjmp.patch
-Patch2: libunwind-aarch64.patch
-Patch3: libunwind-fix-ppc64_test_altivec.patch
-Patch4: libunwind-arm-default-to-exidx.patch
-Patch5: libunwind-1.1-fix-CVE-2015-3239.patch
+Patch1: libunwind-arm-default-to-exidx.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
-BuildRequires: automake libtool autoconf
+BuildRequires: automake libtool autoconf texlive-latex2man
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
 %global _host %{_target_platform}
@@ -36,11 +32,7 @@ libunwind.
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1 -b .default-to-exidx
-%patch5 -p1 -b .CVE-2015-3239
+%patch1 -p1 -b .default-to-exidx
 
 %build
 aclocal
@@ -48,7 +40,7 @@ libtoolize --force
 autoheader
 automake --add-missing
 autoconf
-%configure --enable-static --enable-shared
+%configure --enable-static --enable-shared --enable-setjmp=no
 make %{?_smp_mflags}
 
 %install
@@ -92,6 +84,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Jun 1 2017 Jes Sorensen <jes.sorensen@gmail.com> - 1.2-1
+- Update to libunwind-1.2 (#1439962)
+- Disable setjmp the correct way and get rid of messy patch
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.1-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
