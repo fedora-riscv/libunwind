@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -84,6 +84,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu Jun 1 2017 Jes Sorensen <jes.sorensen@gmail.com> - 1.2-1
 - Update to libunwind-1.2 (#1439962)
 - Disable setjmp the correct way and get rid of messy patch
