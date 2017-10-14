@@ -4,13 +4,16 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.2.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
-Group: Development/Debuggers
+URL: http://savannah.nongnu.org/projects/libunwind
+
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
+
 #Fedora specific patch
 Patch1: libunwind-arm-default-to-exidx.patch
-URL: http://savannah.nongnu.org/projects/libunwind
+Patch2: libunwind-fix-arm-build-failure-due-to-asm.patch
+
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
@@ -33,6 +36,7 @@ libunwind.
 %prep
 %setup -q
 %patch1 -p1 -b .default-to-exidx
+%patch2 -p1 -b .arm
 
 %build
 aclocal
@@ -69,12 +73,11 @@ echo ====================TESTSUITE DISABLED=========================
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING README NEWS
+%license COPYING
+%doc README NEWS
 %{_libdir}/libunwind*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libunwind*.so
 %{_libdir}/libunwind-ptrace.a
 %{_libdir}/pkgconfig/libunwind*.pc
@@ -84,6 +87,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sat Oct 14 2017 Peter Robinson <pbrobinson@fedoraproject.org> 1.2.1-2
+- Add patch to fix ARM issues
+
 * Fri Sep  1 2017 Tom Callaway <spot@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 
@@ -233,7 +239,7 @@ echo ====================TESTSUITE DISABLED=========================
 * Sun Oct 01 2006 Jesse Keating <jkeating@redhat.com> - 0.98.5-3
 - rebuilt for unwind info generation, broken in gcc-4.1.1-21
 
-* Sat Sep 22 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.98.5-2
+* Fri Sep 22 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 0.98.5-2
 - SELinux compatibility fix - stack is now non-exec (Jakub Jelinek suggestion).
 
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 0.98.5-1.1
