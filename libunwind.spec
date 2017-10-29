@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Debuggers
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -55,6 +55,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind*.a
 mv -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a-save $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace*.so*
 
+# fix multilib conflicts
+touch -r NEWS $RPM_BUILD_ROOT%{_includedir}/libunwind.h
+
 %check
 %if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
 echo ====================TESTING=========================
@@ -84,6 +87,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sun Oct 29 2017 Tom Callaway <spot@fedoraproject.org> - 1.2-2
+- fix multilib conflicts
+
 * Thu Jun 1 2017 Jes Sorensen <jes.sorensen@gmail.com> - 1.2-1
 - Update to libunwind-1.2 (#1439962)
 - Disable setjmp the correct way and get rid of messy patch
