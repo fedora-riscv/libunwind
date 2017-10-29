@@ -60,7 +60,7 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a-save $RPM_BUILD_ROOT%{_libdir
 rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace*.so*
 
 # fix multilib conflicts
-touch -r NEWS %{_includedir}/libunwind.h
+touch -r NEWS $RPM_BUILD_ROOT%{_includedir}/libunwind.h
 
 %check
 %if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
