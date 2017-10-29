@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 
@@ -59,6 +59,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind*.a
 mv -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a-save $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace*.so*
 
+# fix multilib conflicts
+touch -r NEWS %{_includedir}/libunwind.h
+
 %check
 %if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
 echo ====================TESTING=========================
@@ -87,6 +90,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sun Oct 29 2017 Tom Callaway <spot@fedoraproject.org> - 1.2.1-3
+- fix multilib conflicts
+
 * Sat Oct 14 2017 Peter Robinson <pbrobinson@fedoraproject.org> 1.2.1-2
 - Add patch to fix ARM issues
 
