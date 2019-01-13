@@ -3,8 +3,8 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 1.2.1
-Release: 6%{?dist}
+Version: 1.3.1
+Release: 1%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 
@@ -12,7 +12,6 @@ Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{v
 
 #Fedora specific patch
 Patch1: libunwind-arm-default-to-exidx.patch
-Patch2: libunwind-fix-arm-build-failure-due-to-asm.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
@@ -36,7 +35,6 @@ libunwind.
 %prep
 %setup -q
 %patch1 -p1 -b .default-to-exidx
-%patch2 -p1 -b .arm
 
 %build
 aclocal
@@ -90,6 +88,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sun Jan 13 2019 Ankur Sinha <ankursinha AT fedoraproject DOT org> - 1.3.1-1
+- Update to 1.3.1
+- Remove no longer needed patch (builds on all arches without it)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
