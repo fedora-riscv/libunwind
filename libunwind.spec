@@ -69,9 +69,7 @@ echo ====================TESTING END=====================
 echo ====================TESTSUITE DISABLED=========================
 %endif
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
 %license COPYING
