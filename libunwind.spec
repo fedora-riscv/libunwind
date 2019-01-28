@@ -25,7 +25,6 @@ Libunwind provides a C ABI to determine the call-chain of a program.
 
 %package devel
 Summary: Development package for libunwind
-Group: Development/Debuggers
 Requires: libunwind = %{version}-%{release}
 
 %description devel
