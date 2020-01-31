@@ -4,14 +4,17 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.3.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
-
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 
 #Fedora specific patch
 Patch1: libunwind-arm-default-to-exidx.patch
+# Backport this change from 1.4
+# https://github.com/libunwind/libunwind/commit/05d814b64036b1ea2f0f328b3a985b03559dcf10
+# https://bugzilla.redhat.com/show_bug.cgi?id=1795896
+Patch2: libunwind-1.3.1-no-core-mem-check.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
@@ -34,8 +37,10 @@ libunwind.
 %prep
 %setup -q
 %patch1 -p1 -b .default-to-exidx
+%patch2 -p1 -b .no-core-mem-check
 
 %build
+%global optflags %{optflags} -fcommon
 aclocal
 libtoolize --force
 autoheader
@@ -85,6 +90,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Fri Jan 31 2020 Tom Callaway <spot@fedoraproject.org> - 1.3.1-5
+- backport change from upstream to fix reported test failures (bz1795896)
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
