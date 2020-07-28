@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -85,6 +85,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Tue Apr 14 2020 Dan Horák <dan[at]danny.cz> - 1.4.0-1
 - Update to 1.4.0 with s390x support
 
