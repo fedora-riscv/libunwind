@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.3.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -19,6 +19,7 @@ Patch2: libunwind-1.3.1-no-core-mem-check.patch
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
+BuildRequires: multilib-rpm-config
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
 %global _host %{_target_platform}
@@ -52,6 +53,8 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+
+%multilib_fix_c_header --file %{_includedir}/libunwind.h
 
 # /usr/include/libunwind-ptrace.h
 # [...] aren't really part of the libunwind API.  They are implemented in
@@ -90,6 +93,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Aug 10 2020 Tom Callaway <spot@fedoraproject.org> - 1.3.1-6
+- fix multilib issues with libunwind.h (bz1866512)
+
 * Fri Jan 31 2020 Tom Callaway <spot@fedoraproject.org> - 1.3.1-5
 - backport change from upstream to fix reported test failures (bz1795896)
 
