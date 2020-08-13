@@ -4,18 +4,19 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.4.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 
 #Fedora specific patch
 Patch1: libunwind-arm-default-to-exidx.patch
+# Make libunwind.h multilib friendly
+Patch2: libunwind-1.3.1-multilib-fix.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
-BuildRequires: multilib-rpm-config
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
 %global _host %{_target_platform}
@@ -34,6 +35,7 @@ libunwind.
 %prep
 %setup -q
 %patch1 -p1 -b .default-to-exidx
+%patch2 -p1 -b .multilib-fix
 
 %build
 %global optflags %{optflags} -fcommon
@@ -48,8 +50,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
-%multilib_fix_c_header --file %{_includedir}/libunwind.h
 
 # /usr/include/libunwind-ptrace.h
 # [...] aren't really part of the libunwind API.  They are implemented in
@@ -88,6 +88,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Thu Aug 13 2020 Tom Callaway <spot@fedoraproject.org> - 1.4.0-4
+- revert previous change
+- fix it properly
+
 * Mon Aug 10 2020 Tom Callaway <spot@fedoraproject.org> - 1.4.0-3
 - fix multilib issues with libunwind.h (bz1866512)
 
