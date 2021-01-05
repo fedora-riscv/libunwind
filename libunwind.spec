@@ -17,6 +17,7 @@ Patch2: libunwind-1.3.1-multilib-fix.patch
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
+BuildRequires: make
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
 %global _host %{_target_platform}
