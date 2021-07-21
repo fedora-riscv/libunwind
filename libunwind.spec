@@ -3,8 +3,8 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 1.4.0
-Release: 5%{?dist}
+Version: 1.5.0
+Release: 1%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -89,6 +89,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Jul 21 2021 Tom Callaway <spot@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.4.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
