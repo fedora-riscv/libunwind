@@ -3,7 +3,7 @@
 
 Summary: An unwinding library
 Name: libunwind
-Version: 1.5.0
+Version: 1.6.2
 Release: 1%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
@@ -89,6 +89,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Dec 20 2021 Tom Callaway <spot@fedoraproject.org> - 1.6.2-1
+- update to 1.6.2
+
 * Wed Jul 21 2021 Tom Callaway <spot@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
