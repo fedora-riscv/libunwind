@@ -13,6 +13,7 @@ Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{v
 Patch1: libunwind-arm-default-to-exidx.patch
 # Make libunwind.h multilib friendly
 Patch2: libunwind-1.3.1-multilib-fix.patch
+Patch3: libunwind-1.6.2-dynamic-page-size.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
 
@@ -89,6 +90,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Sun Aug 28 2022 Leif Liddy <leif.liddy@gmail.com> - 1.6.2-4
+- enable dynamic page size support (bz2118019)
+
 * Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
