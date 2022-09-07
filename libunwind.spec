@@ -4,7 +4,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.6.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -35,9 +35,7 @@ The libunwind-devel package includes the libraries and header files for
 libunwind.
 
 %prep
-%setup -q
-%patch1 -p1 -b .default-to-exidx
-%patch2 -p1 -b .multilib-fix
+%autosetup -p1
 
 %build
 %global optflags %{optflags} -fcommon
@@ -90,7 +88,10 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
-* Sun Aug 28 2022 Leif Liddy <leif.liddy@gmail.com> - 1.6.2-4
+* Wed Sep  7 2022 Florian Weimer <fweimer@redhat.com> - 1.6.2-4
+- Enable %%autosetup to apply all patches (#2118019)
+
+* Sun Aug 28 2022 Leif Liddy <leif.liddy@gmail.com> - 1.6.2-3
 - enable dynamic page size support (bz2118019)
 
 * Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-3
