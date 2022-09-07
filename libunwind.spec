@@ -1,10 +1,45 @@
-# rpmbuild parameters:
-# --without check: Do not run the testsuite.  Default is to run it.
+# The testsuite does not pass on all targets.
+#
+# aarch64
+#     Gtest-exc
+#     Ltest-exc
+#     Gtest-trace
+#     Ltest-trace
+#     Ltest-init-local-signal
+#     Ltest-mem-validate: https://github.com/libunwind/libunwind/issues/388
+#     test-reg-state
+#     Ltest-varargs
+#     Lrs-race
+#     test-ptrace
+#     run-check-namespace: https://github.com/libunwind/libunwind/issues/389
+#     run-ptrace-mapper
+#     run-ptrace-misc
+# i686
+#     Ltest-mem-validate: https://github.com/libunwind/libunwind/issues/391
+#     test-async-sig
+#     test-ptrace
+# ppc64le
+#     Gtest-exc
+#     Ltest-exc
+#     Gtest-resume-sig
+#     Ltest-resume-sig
+#     Gtest-resume-sig-rt
+#     Ltest-resume-sig-rt
+#     test-ptrace
+#     run-check-namespace
+#     run-ptrace-mapper
+#     run-ptrace-misc
+#
+%ifarch aarch64 i686 ppc64le
+%global test_failure_override true
+%else
+%global test_failure_override false
+%endif
 
 Summary: An unwinding library
 Name: libunwind
 Version: 1.6.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -14,11 +49,14 @@ Patch1: libunwind-arm-default-to-exidx.patch
 # Make libunwind.h multilib friendly
 Patch2: libunwind-1.3.1-multilib-fix.patch
 Patch3: libunwind-1.6.2-dynamic-page-size.patch
+Patch4: libunwind-skip-no-coredump.patch
+Patch5: libunwind-no-dl-iterate-phdr.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
 BuildRequires: make
+BuildRequires: gcc-c++
 
 # host != target would cause REMOTE_ONLY build even if building i386 on x86_64.
 %global _host %{_target_platform}
@@ -63,13 +101,13 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libunwind-ptrace*.so*
 touch -r NEWS $RPM_BUILD_ROOT%{_includedir}/libunwind.h
 
 %check
-%if 0%{?_with_check:1} || 0%{?_with_testsuite:1}
 echo ====================TESTING=========================
-make check || true
+if ! make check ; then
+    echo ====================FAILED TESTS=====================
+    cat tests/test-suite.log || true
+    %{test_failure_override}
+fi
 echo ====================TESTING END=====================
-%else
-echo ====================TESTSUITE DISABLED=========================
-%endif
 
 %ldconfig_scriptlets
 
@@ -88,6 +126,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Sep  7 2022 Florian Weimer <fweimer@redhat.com> - 1.6.2-5
+- Run the testsuite during build
+
 * Wed Sep  7 2022 Florian Weimer <fweimer@redhat.com> - 1.6.2-4
 - Enable %%autosetup to apply all patches (#2118019)
 
