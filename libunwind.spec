@@ -30,7 +30,12 @@
 #     run-ptrace-mapper
 #     run-ptrace-misc
 #
-%ifarch aarch64 i686 ppc64le
+# s390x
+#     Gtest-resume-sig-rt
+#     Ltest-resume-sig-rt
+#     test-ptrace
+
+%ifarch aarch64 i686 ppc64le s390x
 %global test_failure_override true
 %else
 %global test_failure_override false
@@ -129,6 +134,7 @@ echo ====================TESTING END=====================
 %changelog
 * Mon Feb 20 2023 Tom Callaway <spot@fedoraproject.org> - 1.7.0-0.1.rc2
 - update to 1.7.0-rc2
+- disable tests on s390x (reported upstream: https://github.com/libunwind/libunwind/issues/464)
 
 * Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
