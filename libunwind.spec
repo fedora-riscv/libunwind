@@ -36,20 +36,21 @@
 %global test_failure_override false
 %endif
 
+%global prerel rc2
+
 Summary: An unwinding library
 Name: libunwind
-Version: 1.6.2
-Release: 6%{?dist}
+Version: 1.7.0
+Release: 0.1.%{prerel}%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
-Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
+Source: https://github.com/libunwind/libunwind/archive/refs/tags/v%{version}-%{prerel}.tar.gz
+# http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%%{version}.tar.gz
 
 #Fedora specific patch
 Patch1: libunwind-arm-default-to-exidx.patch
 # Make libunwind.h multilib friendly
 Patch2: libunwind-1.3.1-multilib-fix.patch
-Patch3: libunwind-1.6.2-dynamic-page-size.patch
-Patch4: libunwind-skip-no-coredump.patch
 Patch5: libunwind-no-dl-iterate-phdr.patch
 
 ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
@@ -73,7 +74,7 @@ The libunwind-devel package includes the libraries and header files for
 libunwind.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n %{name}-%{version}-%{prerel}
 
 %build
 %global optflags %{optflags} -fcommon
@@ -126,6 +127,9 @@ echo ====================TESTING END=====================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Feb 20 2023 Tom Callaway <spot@fedoraproject.org> - 1.7.0-0.1.rc2
+- update to 1.7.0-rc2
+
 * Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
