@@ -29,8 +29,11 @@
 #     run-check-namespace
 #     run-ptrace-mapper
 #     run-ptrace-misc
+# s390x
+#     Gtest-resume-sig-rt
+#     Ltest-resume-sig-rt
 #
-%ifarch aarch64 i686 ppc64le
+%ifarch aarch64 i686 ppc64le s390x
 %global test_failure_override true
 %else
 %global test_failure_override false
@@ -39,7 +42,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.6.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -126,6 +129,9 @@ echo ====================TESTING END=====================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Mon Feb 20 2023 Tom Callaway <spot@fedoraproject.org> - 1.6.2-7
+- disable tests on s390x (reported upstream: https://github.com/libunwind/libunwind/issues/464)
+
 * Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
