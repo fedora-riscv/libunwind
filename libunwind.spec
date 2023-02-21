@@ -39,7 +39,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.6.2
-Release: 5%{?dist}
+Release: 5.rv64%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: http://download-mirror.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
@@ -52,7 +52,7 @@ Patch3: libunwind-1.6.2-dynamic-page-size.patch
 Patch4: libunwind-skip-no-coredump.patch
 Patch5: libunwind-no-dl-iterate-phdr.patch
 
-ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
+ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64 riscv64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
 BuildRequires: make
@@ -126,6 +126,9 @@ echo ====================TESTING END=====================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Wed Feb 22 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1.6.2-5.rv64
+- Add riscv64 to supported arch.
+
 * Wed Sep  7 2022 Florian Weimer <fweimer@redhat.com> - 1.6.2-5
 - Run the testsuite during build
 
