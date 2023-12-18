@@ -35,7 +35,7 @@
 #     Ltest-resume-sig-rt
 #     test-ptrace
 
-%ifarch aarch64 i686 ppc64le s390x
+%ifarch aarch64 i686 ppc64le s390x riscv64
 %global test_failure_override true
 %else
 %global test_failure_override false
@@ -46,7 +46,7 @@
 Summary: An unwinding library
 Name: libunwind
 Version: 1.7.0
-Release: 0.2.%{prerel}%{?dist}
+Release: 0.2.%{prerel}.rv64%{?dist}
 License: BSD
 URL: http://savannah.nongnu.org/projects/libunwind
 Source: https://github.com/libunwind/libunwind/archive/refs/tags/v%{version}-%{prerel}.tar.gz
@@ -58,7 +58,7 @@ Patch1: libunwind-arm-default-to-exidx.patch
 Patch2: libunwind-1.3.1-multilib-fix.patch
 Patch5: libunwind-no-dl-iterate-phdr.patch
 
-ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64
+ExclusiveArch: %{arm} aarch64 hppa ia64 mips ppc %{power64} s390x %{ix86} x86_64 riscv64
 
 BuildRequires: automake libtool autoconf texlive-latex2man
 BuildRequires: make
